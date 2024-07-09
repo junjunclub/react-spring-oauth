@@ -47,6 +47,7 @@ import React, { useState } from 'react';
 import Login from './TestLogin';
 import Signup from './TestRegister';
 import ReIssue from './ReIssue';
+import Test from './Test';
 
 const App: React.FC = () => {
   const [showLogin, setShowLogin] = useState(true);
@@ -59,6 +60,7 @@ const App: React.FC = () => {
       </div>
       {showLogin ? <Login /> : <Signup />}
       <ReIssue></ReIssue>
+      <Test></Test>
     </div>
     
   );

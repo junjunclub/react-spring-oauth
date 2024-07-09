@@ -1,5 +1,3 @@
-// src/components/AdminLogin.tsx
-
 import React, { useState } from 'react';
 import axios from 'axios';
 
@@ -29,7 +27,6 @@ const Login: React.FC = () => {
         let accessToken = res.headers['access']
         console.log(res.headers)
         localStorage.setItem('Token', accessToken);
-        localStorage.setItem('Refresh', res.data.adminRefresh);
         // console.log(res.headers)
         console.log(res.headers['access'])
       })

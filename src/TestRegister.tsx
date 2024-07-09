@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-axios.defaults.baseURL = "http://localhost:3000/";
+// axios.defaults.baseURL = "http://localhost:3000/";
 axios.defaults.withCredentials = true;
 
 interface SignupData {
@@ -34,8 +34,6 @@ const Signup: React.FC = () => {
     )
       .then(response => {
         console.log('Signup successful:', response.data);
-        // 여기서 받은 데이터를 처리하거나 상태 업데이트를 할 수 있습니다.
-
       })
       .catch(err => {
         console.error(err);
