@@ -25,36 +25,31 @@ axiosInstance.interceptors.request.use(
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => {
-    return response;
-  },
-  async (error) => {
-    console.log('응답실패')
-    const originalRequest = error.config;
-    console.log(originalRequest)
-    if (error.response && error.response.status === 401 && error.response.data === "access token expired") {
-      try {
-        const response = await axios.post('http://localhost:8080/api/user/reissue', {}, {
-          headers: {
-            'Content-Type': 'application/json',
-          },
-        });
-        let token = response.data.accessToken
-        console.log('====')
-        console.log(token)
-        localStorage.setItem('Token', response.data.accessToken);
-        originalRequest.headers['Authorization'] = `Bearer ${response.data.accessToken}`;
-        return axiosInstance(originalRequest);
-      } catch (err) {
-        console.log('Error!')
-        console.error('Token reissue failed:', err);
-        localStorage.removeItem('Token');
-        window.location.href = '/login'; // or any other action to handle the situation
-        return Promise.reject(err);
+    (response) => {
+      if (response.status === 404) {
+        console.log('404 페이지로 넘어가야 함!');
       }
+  
+      return response;
+    },
+    async (error) => {
+      if (error.response?.status === 401) {
+        // if (error) await tokenRefresh();
+  
+        const accessToken = getToken();
+  
+        error.config.headers = {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        };
+  
+        const response = await axios.request(error.config);
+        return response;
+      }
+      return Promise.reject(error);
     }
-    return Promise.reject(error);
-  }
-);
+  );
+  
+  export default instance;
 
 export default axiosInstance;
