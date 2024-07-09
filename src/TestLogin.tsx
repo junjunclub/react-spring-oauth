@@ -3,6 +3,9 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+// axios.defaults.baseURL = "http://localhost:8080";
+// axios.defaults.withCredentials = true;
+
 const Login: React.FC = () => {
   const [username, setUsername] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -23,9 +26,12 @@ const Login: React.FC = () => {
       }
     })
       .then(res => {
-        localStorage.setItem('Token', res.data.token);
+        let accessToken = res.headers['access']
+        console.log(res.headers)
+        localStorage.setItem('Token', accessToken);
         localStorage.setItem('Refresh', res.data.adminRefresh);
-        console.log(res.data)
+        // console.log(res.headers)
+        console.log(res.headers['access'])
       })
       .catch(err => {
         console.log(err);

@@ -1,38 +1,54 @@
-// src/components/Signup.tsx
-
 import React, { useState } from 'react';
 import axios from 'axios';
 
+axios.defaults.baseURL = "http://localhost:3000/";
+axios.defaults.withCredentials = true;
+
+interface SignupData {
+  username: string;
+  password: string;
+  name: string;
+  email: string;
+}
+
 const Signup: React.FC = () => {
-  const [username, setUsername] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [name, setName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
+  const [formData, setFormData] = useState<SignupData>({
+    username: '',
+    password: '',
+    name: '',
+    email: ''
+  });
   const [error, setError] = useState<string | null>(null);
 
   const onFinish = (event: React.FormEvent) => {
     event.preventDefault();
 
-    axios({
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      url: 'http://localhost:8080/api/user',
-      data: {
-        "username": username,
-        "password": password,
-        "name": name,
-        "email": email
+    axios.post(
+      'http://localhost:8080/api/user',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'application/json'
+        }
       }
-    })
-      .then(res => {
-        console.log('Signup successful:', res.data);
+    )
+      .then(response => {
+        console.log('Signup successful:', response.data);
+        // 여기서 받은 데이터를 처리하거나 상태 업데이트를 할 수 있습니다.
+
       })
       .catch(err => {
-        console.log(err);
+        console.error(err);
         setError('Signup failed. Please try again.');
       });
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [id]: value
+    }));
   };
 
   return (
@@ -44,8 +60,8 @@ const Signup: React.FC = () => {
           <input
             type="text"
             id="username"
-            value={username}
-            onChange={(e) => setUsername(e.target.value)}
+            value={formData.username}
+            onChange={handleChange}
             required
             style={styles.input}
           />
@@ -55,8 +71,8 @@ const Signup: React.FC = () => {
           <input
             type="password"
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            value={formData.password}
+            onChange={handleChange}
             required
             style={styles.input}
           />
@@ -66,8 +82,8 @@ const Signup: React.FC = () => {
           <input
             type="text"
             id="name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
+            value={formData.name}
+            onChange={handleChange}
             required
             style={styles.input}
           />
@@ -77,8 +93,8 @@ const Signup: React.FC = () => {
           <input
             type="email"
             id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleChange}
             required
             style={styles.input}
           />
