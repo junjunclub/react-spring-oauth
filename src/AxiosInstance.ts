@@ -12,6 +12,7 @@ const axiosInstance = axios.create({
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('Token');
+    console.log(token)
     
     config.headers['Content-Type'] = 'application/json';
     config.headers['Authorization'] = `Bearer ${token}`;
@@ -35,12 +36,12 @@ axiosInstance.interceptors.response.use(
     async (error) => {
       if (error.response?.status === 401) {
         // if (error) await tokenRefresh();
-  
-        const accessToken = getToken();
+        const token = localStorage.getItem('Token');
+
   
         error.config.headers = {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${token}`,
         };
   
         const response = await axios.request(error.config);
@@ -49,7 +50,5 @@ axiosInstance.interceptors.response.use(
       return Promise.reject(error);
     }
   );
-  
-  export default instance;
 
 export default axiosInstance;

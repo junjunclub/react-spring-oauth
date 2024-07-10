@@ -2,12 +2,12 @@ import axios from 'axios';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router'
 
-const TokenRefresher = () =>  {
+const TokenRefresher = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
     const refreshAPI = axios.create({
-      baseURL: "http://localhost:8080/api",
+      baseURL: import.meta.env.VITE_APP_GENERATED_SERVER_URL,
       headers: {"Content-Type": "application/json"} // header의 Content-Type을 JSON 형식의 데이터를 전송한다
     });
 
@@ -26,7 +26,7 @@ const TokenRefresher = () =>  {
           if(msg == "Expired Access Token. 토큰이 만료되었습니다") {
             // console.log("토큰 재발급 요청");
             await axios.post(
-              "http://localhost:8080/api/user/reissue",{},
+              `${import.meta.env.VITE_APP_GENERATED_SERVER_URL}/api/token/reissue`,{},
               {headers: {
                 Authorization: `${localStorage.getItem('Authorization')}`,
                 Refresh: `${localStorage.getItem('Refresh')}`,
@@ -54,7 +54,7 @@ const TokenRefresher = () =>  {
           // else if(msg == "만료된 리프레시 토큰입니다") {
           else{
             localStorage.clear();
-            navigate("/user"); 
+            navigate("/"); 
             // window.alert("토큰이 만료되어 자동으로 로그아웃 되었습니다.")
           }
         }
